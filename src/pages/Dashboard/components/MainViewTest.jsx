@@ -24,7 +24,7 @@ const MainViewTest = () => {
 
   const isLoading = false;
 
-  const userId = localStorage.getItem("userId");
+  const userId = localStorage.getItem("userId") || user.userId;
 
   // console.log("ADMISSIONS FROM MAIN VIEW: ", admissions)
 

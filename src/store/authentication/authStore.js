@@ -8,6 +8,7 @@ const SECRET_KEY = new TextEncoder().encode(import.meta.env.VITE_JWT_SECRET);
 const initialAuthState = {
   sessionToken: null,
   user: {
+    userId: "",
     accountType: null,
     contactNo: null,
     admissions: [],
