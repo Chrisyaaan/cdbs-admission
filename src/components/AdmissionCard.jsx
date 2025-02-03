@@ -43,7 +43,7 @@ const AdmissionCard = ({ data, onClick, active }) => {
     if (
       !is_all_required_file_uploaded &&
       admission_status === "in review" &&
-      db_required_documents_table.length !== 0
+      db_required_documents_table?.length !== 0
     ) {
       return { text: "Requirements - In Review", color: "blue" };
     }
@@ -56,7 +56,7 @@ const AdmissionCard = ({ data, onClick, active }) => {
       return { text: "Results - Available", color: "green" };
     }
 
-    if (db_exam_admission_schedule.length > 0) {
+    if (db_exam_admission_schedule?.length > 0) {
       return { text: "Exam - Scheduled", color: "blue" };
     }
 
@@ -98,7 +98,7 @@ const AdmissionCard = ({ data, onClick, active }) => {
       return { text: "Payment - In Progress", color: "yellow" };
     }
 
-    if (db_required_documents_table.length === 0) {
+    if (db_required_documents_table?.length === 0) {
       return { text: "Requirements - In Progress", color: "yellow" };
     }
 
@@ -108,10 +108,10 @@ const AdmissionCard = ({ data, onClick, active }) => {
     is_application_created,
     is_complete_view,
     is_all_required_file_uploaded,
-    db_required_documents_table.length,
+    db_required_documents_table?.length,
     is_for_assessment,
     is_final_result,
-    db_exam_admission_schedule.length,
+    db_exam_admission_schedule?.length,
     is_paid,
     paymethod_id,
   ]);

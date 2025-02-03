@@ -28,16 +28,16 @@ function StatusTrackerTest({ data, selectedAdmissionIndex }) {
   const isApplicationComplete = is_complete_view;
   const isApplicationPending = is_application_created && !is_complete_view;
   const isUploadComplete = is_all_required_file_uploaded;
-  const isUploadPending = db_required_documents_table.some(
+  const isUploadPending = db_required_documents_table?.some(
     (doc) => doc.document_status === "pending"
   );
-  const isUploadRejected = db_required_documents_table.some(
+  const isUploadRejected = db_required_documents_table?.some(
     (doc) => doc.document_status === "rejected"
   );
   const isPaymentComplete = is_paid === true;
   const isPaymentPending = paymethod_id !== null && !is_paid;
   const isPendingAssessment = is_for_assessment && !is_final_result;
-  const isAssessmentSelected = db_exam_admission_schedule.length > 0;
+  const isAssessmentSelected = db_exam_admission_schedule?.length > 0;
   const isResultSent = is_final_result;
 
   const handleOpenApplicationForm = () => {

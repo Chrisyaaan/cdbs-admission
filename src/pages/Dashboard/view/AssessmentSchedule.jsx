@@ -96,16 +96,16 @@ const AssessmentSchedule = () => {
   const levelApplyingFor =
     selectedUserAdmission?.db_admission_table?.level_applying_for;
   const existedExamSchedule =
-    selectedUserAdmission?.db_admission_table.db_exam_admission_schedule;
+    selectedUserAdmission?.db_admission_table?.db_exam_admission_schedule;
   const exam_date =
-    existedExamSchedule[0]?.db_exam_schedule_table?.exam_date ?? "";
+    existedExamSchedule?.[0]?.db_exam_schedule_table?.exam_date ?? "";
   const start_time =
-    existedExamSchedule[0]?.db_exam_schedule_table?.start_time ?? "";
+    existedExamSchedule?.[0]?.db_exam_schedule_table?.start_time ?? "";
   const end_time =
-    existedExamSchedule[0]?.db_exam_schedule_table?.end_time ?? "";
+    existedExamSchedule?.[0]?.db_exam_schedule_table?.end_time ?? "";
   const location =
-    existedExamSchedule[0]?.db_exam_schedule_table?.location ?? "";
-  const eas_id = existedExamSchedule[0]?.eas_id
+    existedExamSchedule?.[0]?.db_exam_schedule_table?.location ?? "";
+  const eas_id = existedExamSchedule?.[0]?.eas_id
 
   const handleScheduleForDay = (day) => {
     // console.log(day);
@@ -187,7 +187,7 @@ const AssessmentSchedule = () => {
         }
       />
 
-      {existedExamSchedule.length === 0 && (
+      {existedExamSchedule?.length === 0 && (
         <Modal
           onClose={handleCloseNoSchedule}
           bodyContent={
@@ -217,7 +217,7 @@ const AssessmentSchedule = () => {
         ></Modal>
       )}
 
-      {existedExamSchedule.length > 0 && (
+      {existedExamSchedule?.length > 0 && (
         <Modal
           bodyContent={
             <div>
@@ -307,7 +307,7 @@ const AssessmentSchedule = () => {
         />
       )}
 
-      {existedExamSchedule.length > 0 && showReschedModal && (
+      {existedExamSchedule?.length > 0 && showReschedModal && (
         <Modal
           onClose={() => setShowReschedModal(prev => !prev)}
           bodyContent={
