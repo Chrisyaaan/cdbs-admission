@@ -8,7 +8,11 @@ export default {
     extend: {
       colors: {
         yellowAccent: '#E4BC34',
-        blueAccent: '#012169'
+        blueAccent: '#012169',
+        greyAccent: '#909590',
+        redAccent: "#C8102E",
+        orangeAccent: "#E1AB5280",
+        greenAccent: "#007A33"
       }
     },
   },

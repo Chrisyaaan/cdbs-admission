@@ -3,9 +3,10 @@ import check from "../assets/images/check.png";
 import close from "../assets/images/close-2.svg";
 import { useNavigate } from "react-router-dom";
 import useAdmissionStore from "../store/admission/useAdmissionStore";
+import arrowNext from "../assets/images/no1arrow-left.png";
 
 function StatusTrackerTest({ data, selectedAdmissionIndex }) {
-  const { db_admission_table, admission_id } = data
+  const { db_admission_table, admission_id } = data;
   const {
     admission_status,
     is_application_created,
@@ -17,11 +18,12 @@ function StatusTrackerTest({ data, selectedAdmissionIndex }) {
     db_exam_admission_schedule,
     is_paid,
     paymethod_id,
+    is_passed: isPassed,
   } = db_admission_table;
 
-  const {setCurrentAdmissionId} = useAdmissionStore()
+  const { setCurrentAdmissionId } = useAdmissionStore();
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const isApplicationComplete = is_complete_view;
   const isApplicationPending = is_application_created && !is_complete_view;
@@ -38,258 +40,229 @@ function StatusTrackerTest({ data, selectedAdmissionIndex }) {
   const isAssessmentSelected = db_exam_admission_schedule.length > 0;
   const isResultSent = is_final_result;
 
-  const steps = [
-    {
-      isComplete: true,
-      title: "Step 1",
-      render: () => <img src={check} alt="check" />,
-    },
-    {
-      isComplete: isApplicationComplete,
-      isPending: isApplicationPending && !isApplicationComplete,
-      title: "Step 2",
-    },
-    {
-      isComplete: isUploadComplete,
-      isPending: isUploadPending && !isUploadComplete && isApplicationComplete,
-      isRejected: isUploadRejected,
-      title: "Step 3",
-    },
-    {
-      isComplete: isPaymentComplete,
-      isPending: isPaymentPending && !isPaymentComplete,
-      title: "Step 4",
-    },
-    {
-      isComplete: isPendingAssessment,
-      isPending: isAssessmentSelected && !isPendingAssessment,
-      title: "Step 5",
-    },
-    {
-      isComplete: isResultSent,
-      isPending: isPendingAssessment,
-      title: "Step 6",
-    },
-  ];
+  const handleOpenApplicationForm = () => {
+    if (
+      (is_application_created && admission_status === "in review") ||
+      admission_status === "complete" ||
+      is_complete_view
+    ) {
+      return;
+    }
 
+    navigate("application-form");
+  };
 
-  const handleApplicationFormNav = () => {
-    // if( isApplicationComplete || isApplicationPending){
+  const handleOpenUploadRequirement = () => {
+    if(!isApplicationPending && isUploadComplete){
+      return
+    }
+
+    navigate("application-requirement")
+  }
+
+  const handleOpenPay = () => {
+    // if(!isUploadComplete || isApplicationPending){
     //   return
     // }
 
-    setCurrentAdmissionId(admission_id)
-    navigate('application-form')
+    navigate("application-payment")
   }
 
-  const getStepClass = (step) => {
-    if (step.isComplete) return "circle";
-    if (step.isRejected) return "circle circle-reject";
-    if (step.isPending) return "circle circle-waiting";
-    if (step.isComplete === false) return "circle circle-pending";
-    return "circle-outline";
-  };
+  const handleOpenSchedule = () => {
+    // if(!isPaymentComplete) return;
+    // if(isResultSent) return;
+
+    navigate("assessment-schedule")
+  }
+
+  const timeLineStep = [
+    {
+      label: "Registration",
+      title: "Register in the Admission Portal",
+      subtitle: "admissionportal-cdbs.vercel.app",
+      statusClassName: "border-greenAccent bg-greenAccent",
+      descClassName: "text-greyAccent",
+      isCompleted: true,
+    },
+    {
+      label: "Application",
+      title: "Fill-out Online Application Form",
+      statusClassName: isApplicationComplete
+        ? "border-greenAccent bg-greenAccent"
+        : !isApplicationPending
+        ? "border-yellowAccent bg-yellowAccent"
+        : isApplicationPending && !isApplicationComplete
+        ? "border-blueAccent bg-blueAccent"
+        : "",
+      isPending: isApplicationPending && !isApplicationComplete,
+      isCompleted: isApplicationComplete,
+      isWaiting: !isApplicationPending,
+      onClick: handleOpenApplicationForm,
+      link: {
+        text: "View Application Form",
+        url: "#",
+      },
+      step: 2,
+    },
+    {
+      label: "Upload",
+      title: "Upload Requirements",
+      statusClassName: isUploadComplete
+        ? "border-greenAccent bg-greenAccent"
+        : !isUploadComplete && isApplicationPending && !isUploadPending
+        ? "border-yellowAccent bg-yellowAccent"
+        : isApplicationComplete ||
+          (isApplicationPending && !isUploadComplete && isUploadPending)
+        ? "border-blueAccent bg-blueAccent"
+        : "",
+      isPending: !isUploadComplete && isApplicationPending && !isUploadPending,
+      isCompleted: isUploadComplete,
+      isWaiting:
+        isApplicationComplete ||
+        (isApplicationPending && !isUploadComplete && isUploadPending),
+      isRejected: isUploadRejected,
+      step: 3,
+      onClick: handleOpenUploadRequirement
+    },
+    {
+      label: "Payment",
+      title: "Pay Admission Fee",
+      statusClassName: isPaymentComplete
+        ? "border-greenAccent bg-greenAccent"
+        : !isPaymentPending && isUploadComplete && isApplicationComplete
+        ? "border-yellowAccent bg-yellowAccent"
+        : isPaymentPending && !isPaymentComplete
+        ? "border-blueAccent bg-blueAccent"
+        : "bg-white",
+      isPending: !isPaymentPending && isUploadComplete && isApplicationComplete,
+      isCompleted: isPaymentComplete,
+      isWaiting: isPaymentPending && !isPaymentComplete,
+      step: 4,
+      onClick: handleOpenPay
+    },
+    {
+      label: "Assessment",
+      title: "Select Schedule and Assessment Exam",
+      subtitle: "Take Assessment Exam",
+      statusClassName:
+        isPendingAssessment || isResultSent
+          ? "border-greenAccent bg-greenAccent"
+          : !isAssessmentSelected && isPaymentComplete
+          ? "border-yellowAccent bg-yellowAccent"
+          : isAssessmentSelected && !isPendingAssessment
+          ? "border-blueAccent bg-blueAccent"
+          : "bg-white",
+      isPending: !isAssessmentSelected && isPaymentComplete,
+      isCompleted: isPendingAssessment || isResultSent,
+      isWaiting: isAssessmentSelected && !isPendingAssessment,
+      step: 5,
+      onClick: handleOpenSchedule
+    },
+    {
+      label: "Results",
+      title: "Wait for Results",
+      link: {
+        text: "View Results",
+        url: "#",
+      },
+      statusClassName:
+        isResultSent && isPassed
+          ? "border-greenAccent bg-greenAccent"
+          : isPendingAssessment
+          ? "border-yellowAccent bg-yellowAccent"
+          : isResultSent && !isPassed
+          ? "border-blueAccent bg-blueAccent"
+          : "bg-white",
+      isPending: isPendingAssessment,
+      isCompleted: isResultSent && isPassed,
+      isWaiting: isResultSent && !isPassed,
+      step: 6,
+    },
+  ];
 
   return (
-    <div className="flex lg:ps-[3rem] xl:ps-[5rem] xl:pe-[4rem] pt-[4rem]">
-      {/* LEFT SIDE */}
-      <div className="tracking-section">
-        <div>
-          <h4 className="admission-step-ls">Registration</h4>
-          <h4 className="admission-step-ls">Application</h4>
-          <h4 className="admission-step-ls">Upload</h4>
-          <h4 className="admission-step-ls">Payment</h4>
-          <h4 className="admission-step-ls">Assessment</h4>
-          <h4 className="admission-step-ls">Results</h4>
-        </div>
-      </div>
+    <div className="mx-auto max-w-[50rem] min-w-[50rem] md:max-w-[70rem] md:min-w-[70rem] p-8 2xl:min-w-full 2xl:max-w-full">
+      <div className="relative space-y-[8rem]">
+        {timeLineStep.map((step, index) => (
+          <div
+            key={step.label}
+            className="flex items-start gap-[4rem] md:gap-[9rem]"
+          >
+            {/* Label */}
+            <div className="w-24 pt-1 text-[2rem] font-medium text-gray-600 hidden md:block">
+              {step.label}
+            </div>
 
-      {/* CENTER */}
-      <div className="steps-container">
-        {steps.map((step, index) => (
-          <React.Fragment key={index}>
-            <div
-              className={getStepClass(step)}
-              // title={step.isComplete ? "Complete" : step.isPending ? "Pending" : ""}
-            >
-              {step.isComplete || step.isPending || step.isRejected ? (
-                step.render ? (
-                  step.render()
-                ) : (
-                  <img src={check} alt="check" />
-                )
+            {/* Timeline */}
+            <div className="relative">
+              {/* Vertical Line */}
+              {index !== timeLineStep.length - 1 && (
+                <div className="absolute left-[25px] top-[30px] h-[calc(100%+72px)] w-[1px] border-l border-dashed border-gray-300" />
+              )}
+
+              {/* Circle */}
+              {step.isRejected ? (
+                <div>
+                  <div
+                    className={`relative z-10 flex h-[5.2rem] w-[5.2rem] items-center justify-center rounded-full border border-redAccent bg-redAccent`}
+                  >
+                    <img src={close} className="w-8 h-8" />
+                  </div>
+                </div>
               ) : (
-                index + 1
+                <div
+                  className={`relative z-10 flex h-[5.2rem] w-[5.2rem] items-center justify-center rounded-full border ${step.statusClassName}`}
+                >
+                  {step.isCompleted ? (
+                    <img src={check} className="w-8 h-8" />
+                  ) : step.isPending || step.isWaiting ? (
+                    <img src={check} className="w-8 h-8" />
+                  ) : (
+                    <span className="text-[2rem] text-gray-600">
+                      {step.step}
+                    </span>
+                  )}
+                </div>
               )}
             </div>
-            {index < steps.length - 1 && <div className="dash-line"></div>}
-          </React.Fragment>
+
+            {/* Content */}
+            <div
+              className={`flex flex-1 justify-between border-b border-b-black ${
+                step.isCompleted ? "" : "cursor-pointer"
+              }`}
+              onClick={step.onClick}
+            >
+              <div className="flex flex-col">
+                <h3
+                  className={`${
+                    step.isCompleted ? step.descClassName : "text-gray-900"
+                  }`}
+                >
+                  {step.title}
+                </h3>
+                {step.subtitle && (
+                  <p className="text-[1.5rem] text-gray-500">{step.subtitle}</p>
+                )}
+                {step.link && (
+                  <a
+                    href={step.link.url}
+                    className="mt-1 text-[1.5rem] text-blue-600 hover:text-blue-800"
+                  >
+                    {step.link.text}
+                  </a>
+                )}
+              </div>
+              {/* Arrow */}
+              <div className="pt-1">
+                <img
+                  src={arrowNext}
+                  className="h-[36px] w-[36px] object-contain"
+                />
+              </div>
+            </div>
+          </div>
         ))}
-      </div>
-      {/* <div className="steps-container ">
-        <div className="circle">
-          <img src={check} />
-        </div>
-        <div className="dash-line"></div>
-        {isApplicationComplete ? (
-          <div title="Complete" className="circle">
-            <img src={check} />
-          </div>
-        ) : !isApplicationPending ? (
-          <div title="Pending" className="circle circle-pending">
-            <img src={check} />
-          </div>
-        ) : isApplicationPending && !isApplicationComplete ? (
-          <div title="Pending" className="circle circle-waiting">
-            <img src={check} />
-          </div>
-        ) : (
-          <div className="circle-outline">2</div>
-        )}
-        <div className="dash-line"></div>
-        {isUploadComplete ? (
-          <div title="Complete" className="circle">
-            <img src={check} />
-          </div>
-        ) : isUploadRejected ? (
-          <div title="Please reupload" className="circle circle-reject">
-            <img src={close} />
-          </div>
-        ) : !isUploadPending && isApplicationComplete ? (
-          <div title="Pending" className="circle circle-pending">
-            <img src={check} />
-          </div>
-        ) : isUploadPending && !isUploadComplete && isApplicationComplete ? (
-          <div title="Pending" className="circle circle-waiting">
-            <img src={check} />
-          </div>
-        ) : (
-          <div className="circle-outline">3</div>
-        )}
-        <div className="dash-line"></div>
-        {isPaymentComplete ? (
-          <div title="Complete" className="circle">
-            <img src={check} />
-          </div>
-        ) : !isPaymentPending && isUploadComplete ? (
-          <div title="Pending" className="circle circle-pending">
-            <img src={check} />
-          </div>
-        ) : isPaymentPending && !isPaymentComplete ? (
-          <div title="Pending" className="circle circle-waiting">
-            <img src={check} />
-          </div>
-        ) : (
-          <div className="circle-outline">4</div>
-        )}
-        <div className="dash-line"></div>
-        {isPendingAssessment ? (
-          <div title="Complete" className="circle">
-            <img src={check} />
-          </div>
-        ) : !isAssessmentSelected && isPaymentComplete ? (
-          <div title="pending" className="circle circle-pending">
-            <img src={check} />
-          </div>
-        ) : isAssessmentSelected && !isPendingAssessment ? (
-          <div title="pending" className="circle circle-waiting">
-            <img src={check} />
-          </div>
-        ) : (
-          <div className="circle-outline">5</div>
-        )}
-        <div className="dash-line"></div>
-        {isResultSent ? (
-          <div title="Complete" className="circle">
-            <img src={check} />
-          </div>
-        ) : isAssessmentPending ? (
-          <div title="Pending" className="circle circle-waiting">
-            <img src={check} />
-          </div>
-        ) : (
-          <div className="circle-outline">6</div>
-        )}
-      </div> */}
-
-      {/* RIGHT SIDE */}
-      <div className="tracking-desc-section">
-        <div className="desc-steps">
-          <div className="admission-step desc-step" style={{ color: "#aaa" }}>
-            <span>Register in the Admission Portal</span>
-            <span className="desc-subtext">
-              admissionportal-cdbs.vercel.app
-            </span>
-          </div>
-          <div
-            className="admission-step desc-step desc-step-succ"
-            style={{ color: isApplicationComplete ? "#aaa" : "" }}
-            onClick={handleApplicationFormNav}
-          >
-            <span>Fill-out Online Application Form</span>
-
-            <span className="desc-subtext">View Application Form</span>
-          </div>
-          <h4
-            style={{ color: isUploadComplete ? "#aaa" : "" }}
-            className="admission-step desc-step desc-step-succ"
-            onClick={() => {
-              if (!isApplicationPending && isUploadComplete) {
-                return;
-              }
-              // setPage("upload");
-              if (isUploadPending || isUploadRejected) {
-                // setEdit(() => true);
-              }
-              // getLengthRequirements();
-            }}
-          >
-            Upload Requirements
-          </h4>
-          <h4
-            style={{ color: isPaymentComplete ? "#aaa" : "" }}
-            className="admission-step desc-step desc-step-succ"
-            onClick={() => {
-              if (!isUploadComplete || isApplicationPending) {
-                return;
-              }
-              // setPage("payment");
-            }}
-          >
-            Pay Admission Fee
-          </h4>
-          <h4
-            className="admission-step desc-step desc-step-succ"
-            style={{ color: isAssessmentSelected ? "#aaa" : "" }}
-            onClick={async () => {
-              if (!isPaymentComplete) return;
-              if (isResultSent) return;
-              // await getSchedules(
-              //   admissions["admissionsArr"][dataIndex]["db_admission_table"][
-              //     "level_applying_for"
-              //   ]
-              // );
-              // setPage("calendar");
-            }}
-          >
-            Select Schedule and Assessment Exam
-          </h4>
-          <h4 className="admission-step  desc-step desc-step-succ last-step">
-            {isResultSent ? "Results available" : "Wait for Results"}
-
-            {isResultSent ? (
-              <span
-                onClick={() => {
-                  console.log("clicked");
-                  // setShowResultModal(true);
-                }}
-                className="results-requirements"
-              >
-                View Results
-              </span>
-            ) : null}
-          </h4>
-        </div>
       </div>
     </div>
   );

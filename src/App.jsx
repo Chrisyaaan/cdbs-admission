@@ -19,6 +19,10 @@ import useAuthStore from "./store/authentication/authStore";
 import MainViewTest from "./pages/Dashboard/components/MainViewTest";
 import FormRender from "./pages/Dashboard/view/applicationForm/FormRender";
 import ApplicationForm from "./pages/Dashboard/view/applicationForm/ApplicationForm";
+import Requirements from "./pages/Dashboard/view/Requirements";
+import Payment from "./pages/Dashboard/view/Payment";
+import AssessmentSchedule from "./pages/Dashboard/view/AssessmentSchedule";
+
 
 function App() {
 
@@ -56,6 +60,9 @@ function App() {
           <Route index element={<MainViewTest />}/>
           <Route path="application-form" element={<ApplicationForm />} />
           <Route path="application-form/forms" element={<FormRender />} />
+          <Route path="application-requirement" element={<Requirements />} />
+          <Route path="application-payment" element={<Payment />} />
+          <Route path="assessment-schedule" element={<AssessmentSchedule />} />
         </Route>
 
 

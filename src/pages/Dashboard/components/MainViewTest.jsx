@@ -8,16 +8,21 @@ import useGreeting from "../../../hooks/useGreeting";
 import useAuthStore from "../../../store/authentication/authStore";
 import useSideBarStore from "../../../store/sideBar/sideBarStore";
 import ReactLoading from "react-loading";
+import useWatchBreakpoints from "../../../hooks/useWatchBreakPoints";
+import ApplicationHeader from "../../../components/ui/ApplicationHeader";
 
 const MainViewTest = () => {
   const [showModal, setShowModal] = useState(false);
+  const isLg = useWatchBreakpoints("1024");
   const { greeting } = useGreeting();
   const { setShowSideBar } = useSideBarStore();
-  const { handleSlotCheck, admissions, getAllUserAdmissions,  } =
+  const { handleSlotCheck, admissions, getAllUserAdmissions } =
     useAdmissionStore();
   const { user } = useAuthStore();
+  const [selectedIndex, setSelected] = useState(0);
+  const [selectedAdmission, setSelectedAdmission] = useState(null);
 
-  const isLoading = false
+  const isLoading = false;
 
   const userId = localStorage.getItem("userId");
 
@@ -30,8 +35,10 @@ const MainViewTest = () => {
   // Check if has admission
   const hasAdmission = admissions.length > 0;
 
-  console.log("Has admission: ", hasAdmission)
-
+  const handleBackToList = () => {
+    setSelected(null); // Deselect admission to show the list again
+    setSelectedAdmission(null);
+  };
   // SIDE EFFECTS
 
   useEffect(() => {
@@ -80,38 +87,14 @@ const MainViewTest = () => {
               <img src={burgerMenu} alt="" className="w-5 h-5" />
             </button>
           </div>
-          <div className="admission-top-header">
-            <h1 className="lg:text-[4rem] mb-0">Admission Application List</h1>
+          {isLg ? (
+            <div className="admission-top-header">
+              <h1 className="lg:text-[4rem] mb-0">
+                Admission Application List
+              </h1>
 
-            {/* Show Button when there's admissions */}
-            {admissions.length > 0 && (
-              <div
-                className="btn-blue btn btn-add btn-applicant"
-                onClick={() => {
-                  handleShow();
-                  handleSlotCheck();
-                }}
-              >
-                Add Applicant
-              </div>
-            )}
-          </div>
-
-          {/* Content container */}
-          {isLoading ? (
-            <ReactLoading className="app-loader" type={"bubbles"} color="#012169" />
-          ) : (
-            <div className="xl:h-[85vh] lg:h-[77vh]">
-            {/* Center Content if null */}
-            {!hasAdmission && (
-              <div className="center-main">
-                <div className="no-applications-container">
-                  <p>No applications yet?</p>
-                  <p className="no-application-sub-text">
-                    Please click &quot;Add Applicant&quot; to add an applicant
-                  </p>
-                </div>
-
+              {/* Show Button when there's admissions */}
+              {admissions.length > 0 && (
                 <div
                   className="btn-blue btn btn-add btn-applicant"
                   onClick={() => {
@@ -121,10 +104,67 @@ const MainViewTest = () => {
                 >
                   Add Applicant
                 </div>
-              </div>
-            )}
-            {hasAdmission && <Admissions admissions={admissions} />}
-          </div>
+              )}
+            </div>
+          ) : (
+            <ApplicationHeader
+              callBack={handleBackToList}
+              title={"Assessment Exam Schedule"}
+              className="p-0"
+              hasBurger={false}
+              footer={
+                <div className="self-end">
+                  <h3 className="font-extralight">
+                    Status:{" "}
+                    <span className="underline underline-offset-4 text-yellowAccent">
+                      In-progress
+                    </span>
+                  </h3>
+                </div>
+              }
+            />
+          )}
+
+          {/* Content container */}
+          {isLoading ? (
+            <ReactLoading
+              className="app-loader"
+              type={"bubbles"}
+              color="#012169"
+            />
+          ) : (
+            <div className="xl:h-[85vh] lg:h-[77vh]">
+              {/* Center Content if null */}
+              {!hasAdmission && (
+                <div className="center-main">
+                  <div className="no-applications-container">
+                    <p>No applications yet?</p>
+                    <p className="no-application-sub-text">
+                      Please click &quot;Add Applicant&quot; to add an applicant
+                    </p>
+                  </div>
+
+                  <div
+                    className="btn-blue btn btn-add btn-applicant"
+                    onClick={() => {
+                      handleShow();
+                      handleSlotCheck();
+                    }}
+                  >
+                    Add Applicant
+                  </div>
+                </div>
+              )}
+              {hasAdmission && (
+                <Admissions
+                  admissions={admissions}
+                  selectedIndex={selectedIndex}
+                  setSelected={setSelected}
+                  selectedAdmission={selectedAdmission}
+                  setSelectedAdmission={setSelectedAdmission}
+                />
+              )}
+            </div>
           )}
         </div>
       </div>

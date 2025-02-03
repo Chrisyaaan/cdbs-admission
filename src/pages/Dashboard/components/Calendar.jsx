@@ -94,7 +94,7 @@ function CustomToolbarCalendar({
         backgroundColor: isSelected
           ? "#b5e2ff"
           : isPast
-          ? "#e0e0e0"
+          ? "#e0e0e0" 
           : isAvailable
           ? "#4A7AB7"
           : "white",

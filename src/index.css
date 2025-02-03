@@ -28,11 +28,59 @@
   @apply w-[1.75rem] h-[1.75rem] text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500  focus:ring-2 
 }
 
+.section-container{
+  @apply w-full xl:w-[calc(100%_-_33.9rem)] overflow-y-auto
+}
 
+.requirement-heading{
+  @apply font-bold text-[1.75rem] md:text-[2rem]
+}
+
+.requirement-subheading{
+  @apply text-base md:text-[1.7rem] text-blueAccent font-bold
+}
+
+.li-payment {
+  @apply text-[1.25rem] text-start leading-7 text-greyAccent
+}
 
 /* width */
 ::-webkit-scrollbar {
-  width: 0px;
+  width: 5px;
+  height: 5px;
+}
+
+
+/* Big Calendar */
+/* Hide Saturday and Sunday columns in month view */
+/* .rbc-month-view .rbc-day-bg:nth-child(7n+6),
+.rbc-month-view .rbc-day-bg:nth-child(7n+7),
+.rbc-month-view .rbc-date-cell:nth-child(7n+1),
+.rbc-month-view .rbc-date-cell:nth-child(7n+7) {
+  display: none !important;
+} */
+
+.rbc-header:nth-child(7n+1){
+  border-left: none;
+}
+
+/* Hide weekend labels (Saturday and Sunday) */
+/* .rbc-header:nth-child(7n+7),
+.rbc-header:nth-child(7n+1)
+{
+  display: none !important;
+} */
+
+.rbc-month-view{
+  border-top: none;
+  border-inline: none;
+}
+
+.rbc-header {
+  font-size: 16px;  /* Change font size */
+  font-weight: bold; /* Make it bold */
+  text-transform: uppercase; /* Uppercase (optional) */
+  text-align: center; /* Center text */
 }
 
 /* 
@@ -43,15 +91,15 @@
 } */
 
 /* Handle */
-::-webkit-scrollbar-thumb {
+/* ::-webkit-scrollbar-thumb {
   background: #edebeb;
   border-radius: 5px;
-}
+} */
 
 /* Handle on hover */
-::-webkit-scrollbar-thumb:hover {
+/* ::-webkit-scrollbar-thumb:hover {
   background: #555;
-}
+} */
 
 
 /* .main-dashboard-container h1 {
@@ -519,7 +567,7 @@ hr {
 .admission-step {
   /* background-color: red; */
   display: inline-block;
-  height: 12.2rem;
+  /* height: 12.2rem; */
   /* width: 5rem; */
 
   font-size: 2rem;
@@ -574,7 +622,7 @@ hr {
 }
 
 .desc-step.desc-step-succ {
-  margin-top: 4.55rem;
+  /* margin-top: 4.55rem; */
   font-weight: normal;
 }
 

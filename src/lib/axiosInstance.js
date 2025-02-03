@@ -11,12 +11,12 @@ axiosInstance.interceptors.request.use((config) => {
   const fullUrl = config.baseURL + config.url;
 
   // Debug logs
-  console.log("VITE_API_URL: ", import.meta.env.VITE_API_URL)
-  console.log("Base URL:", config.baseURL);
-  console.log("Requested URL Path:", config.url);
-  console.log("Full Request URL:", fullUrl);
-  console.log("SUPABASE KEY: ", import.meta.env.VITE_SUPABASE_KEY)
-  console.log("SUPABASE_URL: ", import.meta.env.VITE_SUPABASE_URL)
+  // console.log("VITE_API_URL: ", import.meta.env.VITE_API_URL)
+  // console.log("Base URL:", config.baseURL);
+  // console.log("Requested URL Path:", config.url);
+  // console.log("Full Request URL:", fullUrl);
+  // console.log("SUPABASE KEY: ", import.meta.env.VITE_SUPABASE_KEY)
+  // console.log("SUPABASE_URL: ", import.meta.env.VITE_SUPABASE_URL)
 
 
   config.headers = {
@@ -26,8 +26,8 @@ axiosInstance.interceptors.request.use((config) => {
     "supabase-key": import.meta.env.VITE_SUPABASE_KEY
   }
 
-  console.log("CONFIGURATION AXIOS: ", config)
-  console.log(" ACCESS TOKEN FROM AXIOS: ", accessToken)
+  // console.log("CONFIGURATION AXIOS: ", config)
+  // console.log(" ACCESS TOKEN FROM AXIOS: ", accessToken)
 
   return config;
 });

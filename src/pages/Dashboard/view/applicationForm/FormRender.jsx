@@ -37,6 +37,7 @@ const FormRender = () => {
     handleSubmitDeclaration,
     setAdmissionFormSteps,
     admissionFormSteps,
+    resetAdmissionFormState,
     admissionPersonalData,
     toggleUpdatePersonalData,
     admissionAcademicData,
@@ -210,7 +211,7 @@ const FormRender = () => {
         "row-start-7 sm:row-auto sm:row-end-4 col-span-5 sm:col-start-7",
     },
   ];
-
+  
   // const currentStepIndex = steps.indexOf(stepId);
 
   // Start of Handling all INPUT FUNCTION
@@ -395,7 +396,6 @@ const FormRender = () => {
         setCurrentStepIndex((prev) => prev + 1);
       }
     })
-
   };
 
   const handleSubmitConcerns = (e) => {
@@ -417,6 +417,7 @@ const FormRender = () => {
     const response = await submitSurveyData()
     console.log(response)
     if(response === 200) {
+      await resetAdmissionFormState()
       await Swal.fire({
         title: "Good job!",
         text: "Application created and saved",
@@ -611,7 +612,6 @@ const FormRender = () => {
                 required={true}
               />
             </div>
-
             {/* 4th Row */}
             {/* <div className="flex items-center justify-evenly gap-[2.5rem] flex-col"> */}
             <div className="grid grid-cols-3 grid-rows-1 gap-[2.5rem]">
@@ -1290,7 +1290,7 @@ const FormRender = () => {
   };
 
   return (
-    <section className="w-full xl:w-[calc(100%_-_33.9rem)] overflow-y-auto ">
+    <section className="section-container">
       {/* Agreement Header */}
       <ApplicationHeader
         callBack={handleOnBack}
@@ -1298,7 +1298,7 @@ const FormRender = () => {
       />
 
       <div className="py-[3.3rem] px-[2rem] ">
-        <div className="border-b border-b-black overflow-y-auto w-full h-[100vh] lg:h-[80vh]">
+        <div className="border-b border-b-black overflow-y-auto w-full h-auto lg:h-[80vh]">
           {renderContent(steps[currentStepIndex])}
         </div>
       </div>

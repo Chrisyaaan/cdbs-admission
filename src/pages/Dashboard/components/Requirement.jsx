@@ -379,7 +379,7 @@ function Requirement({
                           await handleDeleteUploadedFiles(
                             el.requirements_type,
                             el.admission_id,
-                            el.required_doc_id
+                            el.ReactLoading
                           );
 
                           fetchAdmissions();
@@ -604,13 +604,13 @@ function Requirement({
               id="file-input-id"
               accept=".png, .jpeg, .jpg, .pdf"
               multiple
-              onChange={(e) => {
-                const files = Array.from(e.target.files || []);
-                if (handleFileChange(type, files)) {
-                  setFileNames(files.map((file) => file.name) || null);
-                }
-                e.target.value = '';
-              }}
+              // onChange={(e) => {
+              //   const files = Array.from(e.target.files || []);
+              //   if (handleFileChange(type, files)) {
+              //     setFileNames(files.map((file) => file.name) || null);
+              //   }
+              //   e.target.value = '';
+              // }}
             />
             <img
               className="attachment-icon-button"

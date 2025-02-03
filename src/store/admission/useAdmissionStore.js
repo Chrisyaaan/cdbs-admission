@@ -8,6 +8,7 @@ import useAddressStore from "../api/addressStore";
 const initialAdmissionState = {
   userId: localStorage.getItem("userId"),
   admissions: [],
+  selectedUserAdmission: [],
   applicants: {
     gradeLevel: "",
     scheduleSlots: [
@@ -166,6 +167,136 @@ const useAdmissionStore = create(
         ...initialAdmissionState,
         userId: localStorage.getItem("userId"), // Ensure userId is preserved on reset
       }),
+
+      resetAdmissionFormState: () => 
+        set({
+          currentAdmissionId: "",
+          declarationPackage: false,
+          declarationSupportingDoc: false,
+          parentCheck: {
+            father: false,
+            mother: false,
+            guardian: false,
+          },
+          familyBackgroundId: "",
+          admissionFormSteps: "",
+          
+          admissionPersonalData: {
+            levelApplyingFor: "",
+            schoolYear: "",
+            familyName: "",
+            firstName: "",
+            middleName: "",
+            dateOfBirth: "",
+            placeOfBirth: "",
+            age: "",
+            sex: "",
+            religion: "",
+            otherCitizenship: "",
+            otherReligion: "",
+            citizenship: "",
+            acrNumber: "",
+            address: "",
+            province: "",
+            city: "",
+            baranggay: "",
+            postalCode: "",
+            contactNo: "",
+            languages: "",
+            usualCompanion: "",
+          },
+  
+          admissionAcademicData: {
+            namePresentSchool: "",
+            addressPresentSchool: "",
+            presentSchoolContactNo: "",
+            awardsHonor: "",
+            escGrantee: "",
+            currentGrade: "",
+            currentSchoolYear: "",
+          },
+  
+          admissionFamilyData: {
+            noOfSiblings: 0,
+            siblings: [],
+          },
+  
+          admissionParentData: {
+            currentParentData: {
+              parentStatus: "",
+              civilWedding: "",
+              churchName: "",
+              relationshipToChildGuardian: "",
+              parentGuardian: [],
+            },
+            father: {
+              parentId: "",
+              lastName: "",
+              firstName: "",
+              middleName: "",
+              dateOfBirth: "",
+              age: "",
+              educationAttainment: "",
+              employmentStatus: "",
+              employedAt: "",
+              officeAddress: "",
+              contactNo: "",
+              position: "",
+              salary: "",
+            },
+            mother: {
+              parentId: "",
+              lastName: "",
+              firstName: "",
+              middleName: "",
+              dateOfBirth: "",
+              age: "",
+              educationAttainment: "",
+              employmentStatus: "",
+              employedAt: "",
+              officeAddress: "",
+              contactNo: "",
+              position: "",
+              salary: "",
+            },
+            guardian: {
+              parentId: "",
+              background_id: "",
+              lastName: "",
+              firstName: "",
+              middleName: "",
+              dateOfBirth: "",
+              age: "",
+              educationAttainment: "",
+              employmentStatus: "",
+              employedAt: "",
+              officeAddress: "",
+              contactNo: "",
+              position: "",
+              salary: "",
+            },
+          },
+  
+          admissionSpecialConcern: {
+            admission_id: "",
+            bucket_name: "support_documents",
+            special_concern: "",
+            medical_condition: "",
+            medication: "",
+            intervention: "",
+            files: [],
+          },
+  
+          admissionSurvey: {
+            heardList: [],
+            heardOthers: "",
+            factorsInfluenceList: [],
+            factorsOthers: "",
+          },
+  
+          // Optional: Reset any other properties you want here
+          isLoading: false,
+        }),
 
     resetAdmissionDeclaration: () =>
       set({
@@ -499,6 +630,35 @@ const useAdmissionStore = create(
         console.log("ERROR WHILE FETCHING ADMISSION USER: ", err);
       } finally {
         // set({ isLoading: false });
+      }
+    },
+
+    getUserSelectedData: async () => {
+      set({isLoading: true})
+
+      const {currentAdmissionId} = get()
+
+      console.log("CURRENT ADMISSION ID")
+      console.log(currentAdmissionId)
+      try{
+        const response = await axiosInstance.post(
+          "admission/get_user_admission",
+          {
+            admission_id: currentAdmissionId,
+          }
+        );
+
+        set((state) => ({
+          selectedUserAdmission: {
+            ...state.selectedUserAdmission,
+            ...response.data.user[0]
+          }
+        }))
+
+      }catch(error){
+        console.log("ERROR WHILE FETCHING SELECTED USER: ", error)
+      }finally {
+        set({isLoading: false})
       }
     },
 

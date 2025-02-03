@@ -1,4 +1,5 @@
 import { Modal, Form, Button } from "react-bootstrap";
+import {IoClose} from "react-icons/io5"
 import logo from "../../../assets/images/logo.png";
 import useAdmissionStore from "../../../store/admission/useAdmissionStore";
 import ReactLoading from "react-loading";
@@ -59,12 +60,20 @@ const ApplicantRegister = ({ show, setShow }) => {
     setApplicantsFullName({ [field]: value });
   };
 
+  const handleCloseButton = () => {
+    setShow(false)
+  }
+
   return (
     <>
       <Modal show={show} onHide={handleClose} id="modal-container" centered>
-        {/* <Modal.Header closeButton>
-          <Modal.Title>Applicant Information</Modal.Title>
-        </Modal.Header> */}
+        <Modal.Header className="border-none justify-end">
+          <button 
+            onClick={handleCloseButton}
+          >
+            <IoClose size={30} className="me-7"/>
+          </button>
+        </Modal.Header>
         <Modal.Body>
           <div className="logo-modal-container">
             <img src={logo} className="logo-modal" />
@@ -151,12 +160,12 @@ const ApplicantRegister = ({ show, setShow }) => {
                 />
               </Form.Group>
 
-              <hr className="line-container" />
+              <hr className="h-[1px] mx-auto mt-[3.5em]" />
               <div className="button-group-container">
-                <Button variant="primary" type="submit" className="mt-4 w-50">
+                <Button variant="primary" type="submit" className="mt-4 w-full">
                   Register
                 </Button>
-                <Button
+                {/* <Button
                   variant="secondary"
                   className=" w-50"
                   onClick={() => {
@@ -167,7 +176,7 @@ const ApplicantRegister = ({ show, setShow }) => {
                   }}
                 >
                   Cancel
-                </Button>
+                </Button> */}
               </div>
             </Form>
           </div>

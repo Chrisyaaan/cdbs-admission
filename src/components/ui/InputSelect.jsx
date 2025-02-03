@@ -1,7 +1,7 @@
 import React from 'react'
 import cn from "classnames"
 
-const InputSelect = ({ label, name, value, onChange, options, required = false, defaultText= "Select...", isAddress=false, className="", ...rest }) => (
+const InputSelect = ({ label, name, value, onChange, options, required = false, defaultText= "Select...", isAddress=false, isSlotCheck= false, className="", ...rest }) => (
   <div className={cn("mb-4 flex-grow flex flex-col w-full", className)}>
     <label htmlFor={name} className="block text-[0.8rem] font-medium lg:text-[1.75rem] lg:font-bold text-gray">
       {label}
