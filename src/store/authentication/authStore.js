@@ -92,18 +92,20 @@ const useAuthStore = create(
 
           if(response){
             const data = response.data
-            set({
-              userId: data["user"]["user_id"],
-              accountType: data["user"]["account_type"],
-              contactNo: data["user"]["contact_no"],
-              admissions: data["user"]["db_admission_table"],
-              emailAddress: data["user"]["email_address"],
-              firstName: data["user"]["first_name"],
-              middleName: data["user"]["middle_name"],
-              lastName: data["user"]["last_name"],
-              isVerified: data["user"]["is_verified"],
-              registryType: data["user"]["registry_type"],
-            });
+            const user = data.user;
+
+            set({user: {
+              userId: user.user_id,
+              accountType: user.account_type,
+              contactNo: user.contact_no,
+              admissions: user.db_admission_table,
+              emailAddress: user.email_address,
+              firstName: user.first_name,
+              middleName: user.middle_name,
+              lastName: user.last_name,
+              isVerified: user.is_verified,
+              registryType: user.registry_type,
+            }});
   
             // console.log("CREATING TOKEN: ")
             await get().createToken(get().user);

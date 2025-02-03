@@ -83,8 +83,8 @@ function Sidebar() {
               cancelButtonColor: "No",
             });
             if (result.isConfirmed) {
-              navigate("/");
               localStorage.clear();
+              navigate(0);
             } else {
               return;
             }

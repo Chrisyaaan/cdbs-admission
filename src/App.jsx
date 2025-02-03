@@ -36,8 +36,8 @@ function App() {
   return (
     <Router basename="/">
       <Routes>
-        <Route path="/forget/change-pass" element={<NewPassword />} />
         <Route path="/" element={<Login />} />
+        <Route path="/forget/change-pass" element={<NewPassword />} />
                 
         <Route path="/sign-up" element={<SignUp />} />
         <Route path="/register">

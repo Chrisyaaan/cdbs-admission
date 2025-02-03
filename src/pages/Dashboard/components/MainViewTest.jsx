@@ -26,17 +26,6 @@ const MainViewTest = () => {
 
   const userId =  localStorage.getItem("userId") || user.userId;
 
-  console.log({
-    "supabaseUrl": import.meta.env.VITE_SUPABASE_URL,
-    "VITE_API_URL": import.meta.env.VITE_API_URL,
-    "VITE_SUPABASE_KEY": import.meta.env.VITE_SUPABASE_KEY,
-    "VITE_JWT_SECRET": import.meta.env.VITE_JWT_SECRET,
-  })
-
-  console.log("userId: ", userId)
-
-  // console.log("ADMISSIONS FROM MAIN VIEW: ", admissions)
-
   const handleShow = () => {
     setShowModal((prev) => !prev);
   };
