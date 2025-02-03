@@ -299,10 +299,12 @@ const FormRender = () => {
           const updatedSibling = { ...sibling, [name]: value };
           
           // If date of birth is updated, calculate the age
+
           if (name === "siblingDob") {
-            updatedSibling.age = calculateAge(value);
+            updatedSibling.siblingAge = calculateAge(value);
+
           }
-  
+
           return updatedSibling;
         }
         return sibling;
@@ -320,6 +322,7 @@ const FormRender = () => {
       siblingAge: "",
       siblingOccupation: "",
       siblingBusinessOffice: "",
+      age: ""
     };
 
     const newNoOfSiblings = Number(e.target.value);
@@ -1011,8 +1014,8 @@ const FormRender = () => {
                     type="number"
                     name="siblingAge"
                     onInput={InputValidateNumber}
-                    value={sibling.siblingAge || "" }
-                    // onChange={(e) => updateSiblingsList(e, index)}
+                    value={sibling.siblingAge || sibling?.age || "" }
+                    onChange={(e) => updateSiblingsList(e, index)}
                     readOnly
                     required
                     className="col-span-4 lg:col-span-1"

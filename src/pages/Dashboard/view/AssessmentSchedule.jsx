@@ -77,6 +77,9 @@ const AssessmentSchedule = () => {
     scheduleDetails,
     toggleUpdateScheduleForSelectedDay,
     isLoading,
+    toggleUpdateCancelReason,
+    cancelReason,
+    handleResched
   } = useExamScheduleStore();
   const {
     selectedUserAdmission,
@@ -85,9 +88,11 @@ const AssessmentSchedule = () => {
   } = useAdmissionStore();
   const [showScheduleModal, setShowScheduleModal] = useState(false);
   const [selectedTime, setSelectedTime] = useState(null);
-  const [showReschedModal, setShowReschedModal] = useState(true);
+  const [showReschedModal, setShowReschedModal] = useState(false);
   const navigate = useNavigate();
 
+  console.log(selectedUserAdmission)
+  
   const levelApplyingFor =
     selectedUserAdmission?.db_admission_table?.level_applying_for;
   const existedExamSchedule =
@@ -100,6 +105,7 @@ const AssessmentSchedule = () => {
     existedExamSchedule[0]?.db_exam_schedule_table?.end_time ?? "";
   const location =
     existedExamSchedule[0]?.db_exam_schedule_table?.location ?? "";
+  const eas_id = existedExamSchedule[0]?.eas_id
 
   const handleScheduleForDay = (day) => {
     // console.log(day);
@@ -126,7 +132,18 @@ const AssessmentSchedule = () => {
     setSelectedTime(index); // Update the selected index
   };
 
+  const handleCloseNoSchedule = () => {
+    navigate(-1);
+  };
+
   const handleCloseExistingSchedule = () => {};
+
+  const handleReschedButton = async () => {
+    if(cancelReason !== ""){
+      await handleResched(eas_id);
+      // navigate(-1)
+    }
+  }
 
   const submitReserveDate = async () => {
     const response = await handleReserveDate(
@@ -147,6 +164,7 @@ const AssessmentSchedule = () => {
       <ReactLoading className="app-loader" type={"bubbles"} color="#012169" />
     );
   }
+
 
   return (
     <section className="h-screen section-container !overflow-visible lg:!overflow-y-auto">
@@ -171,7 +189,7 @@ const AssessmentSchedule = () => {
 
       {existedExamSchedule.length === 0 && (
         <Modal
-          // onClose={handleSuccessCloseModal}
+          onClose={handleCloseNoSchedule}
           bodyContent={
             <div className="flex flex-col items-center gap-10">
               <div className="text-redAccent">
@@ -189,7 +207,7 @@ const AssessmentSchedule = () => {
           footerContent={
             <div className="flex flex-col gap-4">
               <button
-                // onClick={handleSuccessCloseModal}
+                onClick={handleCloseNoSchedule}
                 className="w-full bg-blueAccent text-white py-2 rounded-md hover:bg-blue-700"
               >
                 Back to Admission Process
@@ -226,12 +244,14 @@ const AssessmentSchedule = () => {
                 {/* <button>Ok, got it!</button>
                 <button>Reschedule</button> */}
                 <Button
+                  callBack={() => navigate(-1)}
                   body="Ok, got it!"
                   className="bg-blueAccent text-white font-light !text-[1.25rem] rounded-none p-[0.55rem] hover:bg-opacity-75"
                 />
                 <Button
                   body="Reschedule"
                   className="bg-redAccent text-white font-light !text-[1.25rem] rounded-none p-[0.55rem] hover:bg-opacity-75"
+                  callBack={() => setShowReschedModal(prev => !prev)}
                 />
               </div>
             </div>
@@ -289,9 +309,12 @@ const AssessmentSchedule = () => {
 
       {existedExamSchedule.length > 0 && showReschedModal && (
         <Modal
+          onClose={() => setShowReschedModal(prev => !prev)}
           bodyContent={
             <div>
-              <h1>Cancel this schedule ?</h1>
+              <h1 className="text-[2rem] text-center font-bold my-4">
+                Cancel this schedule ?
+              </h1>
               <h3>
                 Date: <strong>{exam_date ? exam_date : ""}</strong>
               </h3>
@@ -315,9 +338,22 @@ const AssessmentSchedule = () => {
                   Reason for cancellation:
                 </span>
 
-                <textarea rows={5} className="form-control"></textarea>
+                <textarea
+                  value={cancelReason}
+                  onChange={(e) => toggleUpdateCancelReason(e.target.value)}
+                  rows={5}
+                  className="form-control resize-none text-xs"
+                ></textarea>
               </h3>
             </div>
+          }
+          footerContent={
+            <>
+              <button className="btn btn-blue" onClick={
+                handleReschedButton
+              }>Cancel schedule</button>
+              <button className="btn btn-grey" onClick={() => setShowReschedModal(prev => !prev)}>Cancel</button>
+            </>
           }
         />
       )}
@@ -326,6 +362,15 @@ const AssessmentSchedule = () => {
       <div className="lg:flex ">
         <div className="p-8 w-full lg:w-full border-r border-r-black">
           <BigCalender handleScheduleForDay={handleScheduleForDay} />
+          <div className="legend">
+            <div> LEGEND:</div>
+            <div>
+              <span className="legend-current"></span> Currently Selected
+            </div>
+            <div>
+              <span className="legend-available"></span> with Available Slots
+            </div>
+          </div>
         </div>
         {/* Schedule selection */}
         <div className="w-full lg:w-full px-4">

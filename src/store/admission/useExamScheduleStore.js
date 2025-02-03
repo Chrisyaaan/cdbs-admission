@@ -15,6 +15,7 @@ const initialExamScheduleState = {
     location: "",
     date: "",
   },
+  cancelReason: "",
   scheduleForSelectedDay: []
 }
 
@@ -100,7 +101,29 @@ const useExamScheduleStore = create(
       }
     },
 
+    handleResched: async (easId) => {
+      // set({isLoading: true})
+      const {cancelReason} = get()
+
+      console.log(easId)
+      console.log(cancelReason)
+
+      try{
+        const response = await axiosInstance.post("admission/cancel-schedule",{
+          eas_id: easId,
+          cancel_reason: cancelReason,
+        })
+
+        console.log(response)
+      }catch(error){
+        console.log(error)
+      }finally{
+        set({isLoading: false})
+      }
+    },
+
     toggleUpdateScheduleForSelectedDay: (day) => set({scheduleForSelectedDay: day}),
+    toggleUpdateCancelReason: (reason) => set({cancelReason: reason}),
 
     toggleUpdateScheduleDetail: (updates) =>
       set((state) => ({
@@ -110,7 +133,6 @@ const useExamScheduleStore = create(
         },
       })),
     toggleSelectedDate: (date) => set({selectedDate: date}) 
-
     }), {
       name: "exam-sched-store"
     }
