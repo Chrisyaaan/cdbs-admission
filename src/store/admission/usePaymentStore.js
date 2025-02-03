@@ -1,7 +1,8 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import useAdmissionStore from "./useAdmissionStore";
-import fetchInstance from "../../../../cdbs-admission copy/src/lib/fetchInstance";
+import fetchInstance from "../../lib/fetchInstance";
+
 
 const initialPaymentState = {
   file: null,

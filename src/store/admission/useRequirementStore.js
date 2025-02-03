@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { axiosInstance } from "../../lib/axiosInstance";
-import fetchInstance from "../../../../cdbs-admission copy/src/lib/fetchInstance";
+import fetchInstance from "../../lib/fetchInstance";
 import useAdmissionStore from "./useAdmissionStore";
 
 const initialRequirementState = {
